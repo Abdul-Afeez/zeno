@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zeno CSV</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        .report{
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+       <div class="container">
+            {% load static %}
+
+        {% block content %}
+         <div class="row">
+              <div class="col-md-6 mt-4 mb-4 mx-auto">
+                  <h5>Upload Test Data</h5>
+                  <form method="post" class="form-inline" action="{% url 'process' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="file" class="form-control" name="myfile">
+                        <button class="btn btn-outline-success ml-2 mr-3" type="submit">Upload</button>
+                        <a href="{% url 'delete' %}" class="btn btn-outline-danger" type="submit">Reset Database</a>
+                    </div>
+                  </form>
+              </div>
+         </div>
+
+          {% if uploaded_file_url %}
+            <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+          {% endif %}
+          {% if error %}
+            <p class="text-danger text-center">{{error}}</p>
+          {% endif %}
+
+
+           <div class="w-100"></div>
+
+         <div class="row">
+              <div class="col-md-10 mx-auto">
+              <h5 class="bg-success p-2 text-white">Test Data Html Output</h5>
+              <table class="table table-hover table-condensed">
+                  <colgroup span="4"></colgroup>
+                  <tr>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                    <th>Temperature</th>
+                    <th>Duration</th>
+                  </tr>
+           </table>
+          {% if test_reports %}
+           <div class="report">
+                <table class="table table-hover table-condensed">
+                    {% for test_report in test_reports %}
+                        <tr>
+                            <td>{{test_report.report_id}}</td>
+                            <td>{{test_report.timestamp}}</td>
+                            <td>{{test_report.temperature}}</td>
+                            <td>{{test_report.duration}}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+         {% else %}
+                  <div class="text-center">
+                       <h6>No CSV data was uploaded. Upload one to get started</h6>
+                  </div>
+           </div>
+         {% endif %}
+         </div>
+         </div>
+
+
+
+           <br><br><br>
+
+           <div class="w-100"></div>
+         <div class="container">
+              <div class="row">
+                  <div class="col-md-10 mx-auto">
+               <h5 class="bg-success p-2 text-white">Simple Request Log</h5>
+              <table class="table table-hover table-condensed">
+                  <colgroup span="4"></colgroup>
+                  <tr>
+                    <th>ID</th>
+                    <th>Request Information</th>
+                    <th>Timestamp</th>
+                  </tr>
+           </table>
+          {% if logs %}
+           <div class="report">
+                <table class="table table-hover table-condensed">
+                    {% for log in logs %}
+                        <tr>
+                            <td>{{log.id}}</td>
+                            <td>{{log.request}}</td>
+                            <td>{{log.created_at}}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+         {% else %}
+                  <div class="text-center">
+                       <h6>No request history</h6>
+                  </div>
+           </div>
+         {% endif %}
+         </div>
+              </div>
+         </div>
+
+     {% endblock %}
+
+    </div>
+    </body>
+</html>
+</body>
+</html>
